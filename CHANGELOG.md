@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/maksdizzy/nextjs-camunda-saas/compare/v1.0.0...v1.0.1) (2025-10-19)
+
+
+### Bug Fixes
+
+* resolve environment variable validation errors ([0f5e5b2](https://github.com/maksdizzy/nextjs-camunda-saas/commit/0f5e5b26f519316fe9c562f9438638b78479434c))
+
 # 1.0.0 (2025-10-19)
 
 
