@@ -1,3 +1,21 @@
+# 1.0.0 (2025-10-19)
+
+
+### Bug Fixes
+
+* **auth:** resolve JWT signature mismatch between proxy and engine ([d8bd29e](https://github.com/maksdizzy/nextjs-camunda-saas/commit/d8bd29efec73961fa043b82e82776cb0d148c96c))
+* **ui:** align Next.js API routes with FastAPI proxy endpoints ([742b2a2](https://github.com/maksdizzy/nextjs-camunda-saas/commit/742b2a2f06efbf8d996138fd94a605d6d42138c7))
+
+
+### Features
+
+* **config:** add environment configuration for Guru stack integration ([693262d](https://github.com/maksdizzy/nextjs-camunda-saas/commit/693262d5caf42a536782700b089f50419b727f5d))
+* **deps:** add workflow UI dependencies ([b394836](https://github.com/maksdizzy/nextjs-camunda-saas/commit/b3948360cea4da9f8a7f63deffb94f1dbd3cb9a8))
+* **guru:** add Docker Compose orchestration for complete stack ([b542760](https://github.com/maksdizzy/nextjs-camunda-saas/commit/b54276005c87d114cf9a0a2f6be15212f5e3b754))
+* **guru:** add Guru Framework with Docker worker fixes ([0d67e97](https://github.com/maksdizzy/nextjs-camunda-saas/commit/0d67e97e29b9537212cdf0af1607c18a695b4b30))
+* **proxy:** add FastAPI proxy with Clerk JWT authentication ([ae2c72f](https://github.com/maksdizzy/nextjs-camunda-saas/commit/ae2c72f4e570a0c233158609cba419cf79063153))
+* **ui:** add complete Guru workflow management UI ([cb34378](https://github.com/maksdizzy/nextjs-camunda-saas/commit/cb34378b1379cdf5818c46eebc7cce2fef6ef590))
+
 ## [1.7.6](https://github.com/ixartz/SaaS-Boilerplate/compare/v1.7.5...v1.7.6) (2025-05-01)
 
 
