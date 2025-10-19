@@ -222,7 +222,11 @@ docker-compose -f docker-compose.guru.yaml --env-file .env.guru logs -f
 # Stop services
 docker-compose -f docker-compose.guru.yaml --env-file .env.guru down
 
-# Rebuild services
+# Stop and rebuild services (recommended after code changes)
+docker-compose -f docker-compose.guru.yaml --env-file .env.guru down && \
+docker-compose -f docker-compose.guru.yaml --env-file .env.guru up -d
+
+# Rebuild without stopping first
 docker-compose -f docker-compose.guru.yaml --env-file .env.guru up -d --build
 ```
 
