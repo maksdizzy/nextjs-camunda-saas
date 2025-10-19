@@ -122,11 +122,13 @@ docker-compose -f docker-compose.guru.yaml --env-file .env.guru up -d
 5. **Start the Next.js frontend**:
 ```bash
 npm run dev
+# Or specify port explicitly:
+# PORT=3001 npm run dev
 ```
 
 6. **Access the applications**:
-- Frontend: http://localhost:3000
-- Workflows UI: http://localhost:3000/workflows
+- Frontend: http://localhost:3000 (default) or http://localhost:3001
+- Workflows UI: http://localhost:3000/workflows (or :3001)
 - Camunda Cockpit: http://localhost:8081/camunda (demo/demo)
 - FastAPI Proxy: http://localhost:8000
 - Engine REST API: http://localhost:8081/engine-rest
@@ -245,8 +247,8 @@ Access the Camunda Cockpit to test workflows visually:
 ## 📖 Development Workflow
 
 1. **Start Docker services**: `docker-compose -f docker-compose.guru.yaml --env-file .env.guru up -d`
-2. **Start Next.js dev server**: `npm run dev`
-3. **Access workflow UI**: http://localhost:3000/workflows
+2. **Start Next.js dev server**: `npm run dev` (port 3000) or `PORT=3001 npm run dev`
+3. **Access workflow UI**: http://localhost:3000/workflows (or :3001)
 4. **View Camunda Cockpit**: http://localhost:8081/camunda
 5. **Check proxy health**: http://localhost:8000/health
 
