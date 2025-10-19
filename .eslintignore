@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+.next/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Documentation - don't lint code examples in markdown
+*.md
+
+# FastAPI Python project
+fastapi-proxy/
+
+# Guru Framework Java/Python project
+guru-framework/

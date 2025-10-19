@@ -1,0 +1,20 @@
+# Development and testing dependencies
+# Install with: pip install -r requirements-dev.txt
+
+# Include production requirements
+-r requirements.txt
+
+# Testing
+pytest==8.0.0
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0
+httpx==0.26.0
+
+# Code quality
+black==24.1.1
+ruff==0.1.15
+mypy==1.8.0
+
+# Development tools
+ipython==8.20.0
+ipdb==0.13.13
