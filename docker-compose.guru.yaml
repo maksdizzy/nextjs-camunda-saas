@@ -1,0 +1,128 @@
+# Docker Compose for Complete Guru Framework Stack
+# Usage: docker-compose -f docker-compose.guru.yaml --env-file .env.guru up
+
+services:
+  # Guru Engine (Camunda BPMN)
+  engine:
+    build:
+      context: ./guru-framework/engine
+      dockerfile: Dockerfile
+    container_name: guru-engine
+    ports:
+      - '8081:8080' # Changed to 8081 to avoid conflict with Weaviate
+    environment:
+      # Database Configuration (H2 in-memory for development)
+      - BBPA_ENGINE_DB_URL=jdbc:h2:mem:workflow
+      - BBPA_ENGINE_DB_USER=workflow
+      - BBPA_ENGINE_DB_PASS=workflow
+      - BBPA_ENGINE_DB_DRIVER_CLASS=org.h2.Driver
+      - BBPA_ENGINE_DB_DRIVER=h2
+
+      # Optional Features (disabled for simplicity)
+      - INSCRIPTIONS_HISTORY_ENABLED=false
+      - RABBITMQ_ENABLED=false
+
+      # JWT Authentication (optional) - use default base64 secret from application.yaml
+      # JWT_SECRET is optional, engine has a safe default
+      - JWT_ALGORITHM=HS256
+
+      # Job Execution
+      - JOB_EXECUTION_ENABLE=true
+      - JOB_EXECUTION_MAX_POOL_SIZE=10
+
+      # Logging
+      - LOGGING_LEVEL=INFO
+    networks:
+      - guru-net
+    healthcheck:
+      test: [CMD, curl, -f, -u, 'demo:demo', 'http://localhost:8080/engine-rest/engine']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped
+
+  # Python Workers (External Task Handlers)
+  workers:
+    build:
+      context: ./guru-framework/worker
+      dockerfile: Dockerfile
+    container_name: guru-workers
+    environment:
+      - CAMUNDA_URL=http://engine:8080/engine-rest
+      - CAMUNDA_USER=${ENGINE_USER:-demo}
+      - CAMUNDA_PASSWORD=${ENGINE_PASS:-demo}
+      # Add worker-specific environment variables here
+    depends_on:
+      engine:
+        condition: service_healthy
+    networks:
+      - guru-net
+    restart: unless-stopped
+    # Optional: Mount worker scripts for development
+    # volumes:
+    #   - ./guru-framework/worker:/app/worker
+
+  # FastAPI Proxy (Clerk JWT → Camunda BasicAuth)
+  proxy:
+    build:
+      context: ./fastapi-proxy
+      dockerfile: Dockerfile
+    container_name: guru-proxy
+    ports:
+      - '8000:8000'
+    environment:
+      # Clerk Configuration
+      - CLERK_JWKS_URL=${CLERK_JWKS_URL}
+
+      # Engine Connection
+      - ENGINE_URL=http://engine:8080/engine-rest
+      - ENGINE_USER=${ENGINE_USER:-demo}
+      - ENGINE_PASS=${ENGINE_PASS:-demo}
+
+      # CORS Configuration
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
+
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      engine:
+        condition: service_healthy
+    networks:
+      - guru-net
+    healthcheck:
+      test: [CMD, curl, -f, 'http://localhost:8000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Next.js Frontend (Optional - usually run separately in development)
+  # Uncomment if you want to run everything in Docker
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.nextjs
+  #   container_name: guru-frontend
+  #   ports:
+  #     - "3001:3000"
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://localhost:8000
+  #     - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+  #     - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+  #   depends_on:
+  #     - proxy
+  #   networks:
+  #     - guru-net
+  #   restart: unless-stopped
+
+networks:
+  guru-net:
+    driver: bridge
+    name: guru-network
+
+# Volumes (optional - for data persistence)
+# volumes:
+#   postgres-data:
+#   redis-data:
