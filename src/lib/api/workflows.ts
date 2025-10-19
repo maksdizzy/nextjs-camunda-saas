@@ -64,19 +64,19 @@ export const useWorkflowApi = () => {
   return {
     // Process Definitions
     getProcessDefinitions: async (): Promise<ProcessDefinition[]> => {
-      return fetchWithAuth('/api/v1/process-definitions');
+      return fetchWithAuth('/api/processes');
     },
 
     getProcessDefinition: async (key: string): Promise<ProcessDefinition> => {
-      return fetchWithAuth(`/api/v1/process-definitions/${key}`);
+      return fetchWithAuth(`/api/processes/${key}`);
     },
 
     getProcessDefinitionXml: async (key: string): Promise<{ bpmn20Xml: string }> => {
-      return fetchWithAuth(`/api/v1/process-definitions/${key}/xml`);
+      return fetchWithAuth(`/api/processes/${key}/xml`);
     },
 
     getStartFormVariables: async (key: string): Promise<Record<string, Variable>> => {
-      return fetchWithAuth(`/api/v1/process-definitions/${key}/form-variables`);
+      return fetchWithAuth(`/api/processes/${key}/form`);
     },
 
     // Process Instances
@@ -84,7 +84,7 @@ export const useWorkflowApi = () => {
       key: string,
       data: StartProcessRequest,
     ): Promise<ProcessInstance> => {
-      return fetchWithAuth(`/api/v1/process-definitions/${key}/start`, {
+      return fetchWithAuth(`/api/processes/${key}/start`, {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -111,45 +111,45 @@ export const useWorkflowApi = () => {
       }
 
       const query = queryParams.toString();
-      return fetchWithAuth(`/api/v1/process-instances${query ? `?${query}` : ''}`);
+      return fetchWithAuth(`/api/instances${query ? `?${query}` : ''}`);
     },
 
     getProcessInstance: async (id: string): Promise<ProcessInstanceWithVariables> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}`);
+      return fetchWithAuth(`/api/instances/${id}`);
     },
 
     getProcessInstanceVariables: async (id: string): Promise<Record<string, Variable>> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}/variables`);
+      return fetchWithAuth(`/api/instances/${id}/variables`);
     },
 
     deleteProcessInstance: async (id: string, reason?: string): Promise<void> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}`, {
+      return fetchWithAuth(`/api/instances/${id}`, {
         method: 'DELETE',
         body: JSON.stringify({ reason }),
       });
     },
 
     suspendProcessInstance: async (id: string): Promise<void> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}/suspend`, {
+      return fetchWithAuth(`/api/instances/${id}/suspend`, {
         method: 'POST',
       });
     },
 
     activateProcessInstance: async (id: string): Promise<void> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}/activate`, {
+      return fetchWithAuth(`/api/instances/${id}/activate`, {
         method: 'POST',
       });
     },
 
     getActivityInstances: async (id: string): Promise<Activity[]> => {
-      return fetchWithAuth(`/api/v1/process-instances/${id}/activity-instances`);
+      return fetchWithAuth(`/api/instances/${id}/activity-instances`);
     },
 
     getHistoricActivityInstances: async (
       processInstanceId: string,
     ): Promise<HistoricActivityInstance[]> => {
       return fetchWithAuth(
-        `/api/v1/history/activity-instances?processInstanceId=${processInstanceId}`,
+        `/api/history/activity-instances?processInstanceId=${processInstanceId}`,
       );
     },
 
@@ -175,47 +175,47 @@ export const useWorkflowApi = () => {
       }
 
       const query = queryParams.toString();
-      return fetchWithAuth(`/api/v1/tasks${query ? `?${query}` : ''}`);
+      return fetchWithAuth(`/api/tasks${query ? `?${query}` : ''}`);
     },
 
     getTask: async (id: string): Promise<Task> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}`);
+      return fetchWithAuth(`/api/tasks/${id}`);
     },
 
     getTaskFormVariables: async (id: string): Promise<Record<string, Variable>> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}/form-variables`);
+      return fetchWithAuth(`/api/tasks/${id}/form`);
     },
 
     getTaskForm: async (id: string): Promise<TaskForm> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}/form`);
+      return fetchWithAuth(`/api/tasks/${id}/form`);
     },
 
     completeTask: async (
       id: string,
       data: CompleteTaskRequest,
     ): Promise<void> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}/complete`, {
+      return fetchWithAuth(`/api/tasks/${id}/complete`, {
         method: 'POST',
         body: JSON.stringify(data),
       });
     },
 
     claimTask: async (id: string, userId: string): Promise<void> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}/claim`, {
+      return fetchWithAuth(`/api/tasks/${id}/claim`, {
         method: 'POST',
         body: JSON.stringify({ userId }),
       });
     },
 
     unclaimTask: async (id: string): Promise<void> => {
-      return fetchWithAuth(`/api/v1/tasks/${id}/unclaim`, {
+      return fetchWithAuth(`/api/tasks/${id}/unclaim`, {
         method: 'POST',
       });
     },
 
     // Statistics
     getWorkflowStats: async (): Promise<WorkflowStats> => {
-      return fetchWithAuth('/api/v1/statistics');
+      return fetchWithAuth('/api/statistics');
     },
   };
 };
