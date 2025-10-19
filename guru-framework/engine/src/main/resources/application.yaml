@@ -1,0 +1,45 @@
+spring.h2.console.enabled: true
+camunda.bpm:
+  generic-properties:
+    properties:
+      historyTimeToLive: P30D
+  admin-user:
+    id: demo
+    password: demo
+    firstName: Demo
+    lastName: Demo
+  filter:
+    create: All Tasks
+  run:
+    # https://docs.camunda.org/manual/latest/user-guide/camunda-bpm-run/#cross-origin-resource-sharing
+    cors:
+      enabled: true
+      # To support both HTTP authentication and CORS, allowed-origins must not be *
+      allowed-origins: 'http://localhost:*,http://127.0.0.1:*,http://127.0.0.1:[*],https://*.gurunetwork.ai,https://*.dex.guru,https://*.pages.dev,file://'
+  authorization:
+    enabled: true
+    tenant-check-enabled: true
+  webapp:
+    index-redirect-enabled: true
+#  default-serialization-format: application/json
+server.port: 8080
+
+# health check
+management.endpoints.web.exposure.include: prometheus,health
+management.health.defaults.enabled: false
+management.endpoints.enabled-by-default: true
+management.endpoint.health.enabled: true
+# management.endpoints.web.base-path: /
+# management.endpoints.web.path-mapping.health: health_check
+management.endpoint.health.show-details: always
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:Ym9ZpC1VyZUU9svrmtrJGXZlAlMx5dW29qQwXUDYp50=} # Must be at least 32 bytes (256 bits) when decoded
+  expiration: ${JWT_EXPIRATION:3600} # 24 hours in milliseconds
+  algorithm: ${JWT_ALGORITHM:HS256} # Must match FastAPI's ENGINE_JWT_ALGORITHM
