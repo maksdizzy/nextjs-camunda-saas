@@ -49,3 +49,8 @@ local
 
 # vercel
 .vercel
+.env
+.env.*
+\!.env.example
+\!.env.*.example
+*.local
