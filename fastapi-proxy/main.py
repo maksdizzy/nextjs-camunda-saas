@@ -77,7 +77,7 @@ async def http_exception_handler(request, exc: HTTPException):
     """Handle HTTP exceptions with consistent error format."""
     return JSONResponse(
         status_code=exc.status_code,
-        content=ErrorResponse(error=exc.detail, detail=str(exc.detail)).dict(),
+        content=ErrorResponse(error=exc.detail, detail=str(exc.detail)).model_dump(mode='json'),
     )
 
 
@@ -89,7 +89,7 @@ async def general_exception_handler(request, exc: Exception):
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content=ErrorResponse(
             error="Internal server error", detail="An unexpected error occurred"
-        ).dict(),
+        ).model_dump(mode='json'),
     )
 
 

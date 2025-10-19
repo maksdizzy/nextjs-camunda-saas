@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     engine_user: str = "demo"
     engine_pass: str = "demo"
     engine_timeout: int = 30  # seconds
+    engine_jwt_secret: str = "Ym9ZpC1VyZUU9svrmtrJGXZlAlMx5dW29qQwXUDYp50="  # Base64 encoded secret
+    engine_jwt_algorithm: str = "HS256"
 
     # CORS Configuration (can be comma-separated string or list)
     cors_origins: str | List[str] = "http://localhost:3000"

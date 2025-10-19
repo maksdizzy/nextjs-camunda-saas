@@ -1,7 +1,10 @@
 """Camunda Engine REST API client."""
 import logging
 from typing import Any, Dict, List, Optional
+from datetime import datetime, timedelta
+import base64
 import httpx
+import jwt
 from fastapi import HTTPException, status
 
 from config import get_settings
@@ -25,6 +28,33 @@ class CamundaClient:
         self.base_url = self.settings.engine_url.rstrip("/")
         self.auth = (self.settings.engine_user, self.settings.engine_pass)
         self.timeout = self.settings.engine_timeout
+
+    def _generate_engine_jwt(self) -> str:
+        """Generate JWT token for Camunda Engine authentication."""
+        # Decode base64 secret
+        try:
+            secret = base64.b64decode(self.settings.engine_jwt_secret)
+        except Exception:
+            # If not base64, use as-is
+            secret = self.settings.engine_jwt_secret
+
+        now = datetime.utcnow()
+        payload = {
+            "sub": self.settings.engine_user,
+            "email": f"{self.settings.engine_user}@camunda.local",  # Required by engine
+            "isActive": True,  # Required by engine (camelCase!)
+            "isSuperuser": True,  # Required by engine (grants admin access, camelCase!)
+            "isVerified": True,  # Required by engine (camelCase!)
+            "iat": int(now.timestamp()),
+            "exp": int((now + timedelta(hours=1)).timestamp())
+        }
+
+        token = jwt.encode(
+            payload,
+            secret,
+            algorithm=self.settings.engine_jwt_algorithm
+        )
+        return token
 
     async def _request(
         self,
@@ -50,6 +80,9 @@ class CamundaClient:
         """
         url = f"{self.base_url}/{path.lstrip('/')}"
 
+        # Generate JWT token for engine authentication
+        engine_token = self._generate_engine_jwt()
+
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.request(
@@ -57,7 +90,7 @@ class CamundaClient:
                     url=url,
                     params=params,
                     json=json,
-                    auth=self.auth,
+                    headers={"Authorization": f"Bearer {engine_token}"},
                 )
 
                 # Handle non-2xx responses

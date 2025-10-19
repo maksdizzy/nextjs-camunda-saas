@@ -22,8 +22,8 @@ services:
       - INSCRIPTIONS_HISTORY_ENABLED=false
       - RABBITMQ_ENABLED=false
 
-      # JWT Authentication (optional) - use default base64 secret from application.yaml
-      # JWT_SECRET is optional, engine has a safe default
+      # JWT Authentication (must match proxy's ENGINE_JWT_SECRET)
+      - JWT_SECRET=${ENGINE_JWT_SECRET:-Ym9ZpC1VyZUU9svrmtrJGXZlAlMx5dW29qQwXUDYp50=}
       - JWT_ALGORITHM=HS256
 
       # Job Execution
@@ -79,6 +79,10 @@ services:
       - ENGINE_URL=http://engine:8080/engine-rest
       - ENGINE_USER=${ENGINE_USER:-demo}
       - ENGINE_PASS=${ENGINE_PASS:-demo}
+
+      # Engine JWT Configuration (must match engine's secret)
+      - ENGINE_JWT_SECRET=${ENGINE_JWT_SECRET:-Ym9ZpC1VyZUU9svrmtrJGXZlAlMx5dW29qQwXUDYp50=}
+      - ENGINE_JWT_ALGORITHM=HS256
 
       # CORS Configuration
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
