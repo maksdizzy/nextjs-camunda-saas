@@ -148,21 +148,42 @@ npm run dev
 
 ## 🔧 Configuration
 
-### Clerk Authentication
+### Required Environment Variables
+
+The application requires several environment variables to be configured in `.env.local`:
+
+#### 1. Clerk Authentication (Required)
 
 1. Create a Clerk account at [Clerk.com](https://go.clerk.com/zGlzydF)
 2. Create a new application
 3. Enable Organizations in settings
-4. Copy your keys to `.env.local`:
+4. Add to `.env.local`:
 
 ```bash
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 ```
 
-### Guru Framework Setup
+#### 2. Stripe Payments (Required)
 
-The Guru stack requires matching JWT secrets between the proxy and engine:
+1. Create a Stripe account at [Stripe.com](https://stripe.com)
+2. Get your test mode API keys from the [Dashboard](https://dashboard.stripe.com/)
+3. Add to `.env.local`:
+
+```bash
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+BILLING_PLAN_ENV=dev
+```
+
+**Note**: For development, use `BILLING_PLAN_ENV=dev`. Change to `prod` for production.
+
+#### 3. Guru Framework Setup (Required for Workflows)
+
+The Guru stack requires matching JWT secrets between the proxy and engine in `.env.guru`:
 
 ```bash
 # .env.guru
